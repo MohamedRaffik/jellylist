@@ -1,0 +1,38 @@
+version: '3'
+services:
+  server:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: server
+    restart: unless-stopped
+    ports:
+      - mode: host
+        target: 5000
+        published: 5000
+    volumes:
+      - type: bind
+        source: ./backend
+        target: /app
+    networks:
+      - jellylist
+  
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: web
+    restart: unless-stopped
+    ports:
+      - mode: host
+        target: 3000
+        published: 3000
+    volumes:
+      - type: bind
+        source: ./frontend
+        target: /app
+    networks:
+      - jellylist
+
+networks:
+  jellylist: {}
