@@ -10,7 +10,15 @@ const usersApi = api.injectEndpoints({
       }),
       providesTags: [Tags.User],
     }),
+    login: build.mutation<User, { email: string; password: string }>({
+      query: (body) => ({
+        url: '/v1/users/login/',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: [Tags.User],
+    }),
   }),
 });
 
-export const { useGetSessionUserQuery } = usersApi;
+export const { useGetSessionUserQuery, useLoginMutation } = usersApi;

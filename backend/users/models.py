@@ -30,6 +30,8 @@ user_manager = UserManager()
 class User(AbstractBaseUser):
     email = models.EmailField(unique=True)
     is_superuser = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     objects = user_manager
 

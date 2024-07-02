@@ -12,11 +12,7 @@ class AsyncDjangoAuth(SessionAuth):
 
     async def get_current_user(self, request) -> User:
         user = await request.auser()
-        if not user:
-            raise Exception(
-                "No user found. Ensure endpoint is protected with `auth` parameter."
-            )
-        return await request.auser()
+        return user
 
 
 class AsyncDjangoAuthSuperUser(AsyncDjangoAuth):

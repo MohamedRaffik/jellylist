@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   AppShell,
   Burger,
@@ -9,7 +9,7 @@ import {
   Title,
 } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 
 import { useGetSessionUserQuery } from './services/users';
 
@@ -40,11 +40,19 @@ const CustomNavLink: FunctionComponent<CustomNavLinkProps> = (props) => {
 };
 
 const App = () => {
-  const { data, error, isLoading } = useGetSessionUserQuery();
+  const { isError, isLoading } = useGetSessionUserQuery();
 
   const [opened, { toggle }] = useDisclosure(false);
 
   const isMobile = useMediaQuery(`(max-width: 768px)`);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoading && isError) {
+      navigate('/login');
+    }
+  }, [isLoading, isError]);
 
   if (isLoading) {
     return <LoadingOverlay visible={true} />;

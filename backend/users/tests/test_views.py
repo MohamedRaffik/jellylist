@@ -58,3 +58,43 @@ class TestCreateUser(TestCase):
         self.assertEqual(response.status_code, 200, response.content)
         self.assertEqual(response.json(), {"email": "test2"})
         self.assertTrue(User.objects.filter(email="test2").exists())
+
+
+class TestLoginUser(TestCase):
+    def setUp(self):
+        self.url = "/api/v1/users/login/"
+        self.client = Client()
+        self.user = User.objects.create_user(email="test", password="test")
+
+    def test_login_user_with_nonexistent_user(self):
+        response = self.client.post(
+            self.url,
+            data={"email": "test2", "password": "test2"},
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_login_user_with_wrong_password(self):
+        response = self.client.post(
+            self.url,
+            data={"email": "test", "password": "test2"},
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_login_user_with_wrong_email(self):
+        response = self.client.post(
+            self.url,
+            data={"email": "test2", "password": "test"},
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_login_user(self):
+        response = self.client.post(
+            self.url,
+            data={"email": "test", "password": "test"},
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"email": "test"})
